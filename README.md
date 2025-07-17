@@ -210,9 +210,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **Rishi Achavelli**
-- GitHub: [@rishiachavelli](https://github.com/rishiachavelli)
-- LinkedIn: [Rishi Achavelli](https://linkedin.com/in/rishiachavelli)
-- Email: rishi.achavelli@example.com
+- GitHub: [@rishiachavelli](https://github.com/achavellir)
+- LinkedIn: [Rishi Achavelli](https://linkedin.com/in/achavelli)
+- Email: achavellirishi@gmail.com
 
 ---
 
