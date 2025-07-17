@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMAP Demo Guide - Getting Started</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1a202c;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .guide-content {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .demo-accounts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .account-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .account-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .account-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .account-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .account-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .account-info p {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .credentials {
+            background: #e2e8f0;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .steps {
+            counter-reset: step-counter;
+        }
+
+        .step {
+            counter-increment: step-counter;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step::before {
+            content: counter(step-counter);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .api-endpoints {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .endpoint {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .method {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .method.get { background: #dcfce7; color: #166534; }
+        .method.post { background: #dbeafe; color: #1e40af; }
+        .method.put { background: #fef3c7; color: #92400e; }
+        .method.delete { background: #fecaca; color: #991b1b; }
+
+        .endpoint-path {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+
+        .endpoint-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-left: auto;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .cta-section h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .cta-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .cta-btn.primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .cta-btn.primary:hover {
+            background: #f8fafc;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .guide-content {
+                padding: 2rem;
+            }
+            
+            .demo-accounts {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ SAMAP Demo Guide</h1>
+            <p>Complete Guide to Secure Access Management & Audit Platform</p>
+            <a href="/" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Login
+            </a>
+        </div>
+
+        <div class="guide-content">
+            <!-- Demo Accounts Section -->
+            <div class="section">
+                <h2>
+                    <div class="section-icon"><i class="fas fa-users"></i></div>
+                    Demo Accounts
+                </h2>
+                <p>Use these pre-configured accounts to explore different access levels and features:</p>
+                
+                <div class="demo-accounts">
+                    <div class="account-card">
+                        <div class="account-header">
+                            <div class="account-avatar"><i class="fas fa-crown"></i></div>
+                            <div class="account-info">
+                                <h3>System Administrator</h3>
+                                <p>Full system access with all permissions</p>
+                            </div>
+                        </div>
+                        <div class="credentials">
+                            <strong>Username:</strong> admin<br>
+                            <strong>Password:</strong> admin123
+                        </div>
+                        <p><strong>Access Level:</strong> Complete system control, user management, security monitoring, audit logs, compliance reports</p>
+                    </div>
+
+                    <div class="account-card">
+                        <div class="account-header">
+                            <div class="account-avatar"><i class="fas fa-user-circle"></i></div>
+                            <div class="account-info">
+                                <h3>Neeraj Kumar</h3>
+                                <p>Standard user with basic permissions</p>
+                            </div>
+                        </div>
+                        <div class="credentials">
+                            <strong>Username:</strong> neeraj<br>
+                            <strong>Password:</strong> password
+                        </div>
+                        <p><strong>Access Level:</strong> Dashboard view, reports access, basic system information</p>
+                    </div>
+
+                    <div class="account-card">
+                        <div class="account-header">
+                            <div class="account-avatar"><i class="fas fa-user"></i></div>
+                            <div class="account-info">
+                                <h3>Demo User</h3>
+                                <p>Standard user for testing purposes</p>
+                            </div>
+                        </div>
+                        <div class="credentials">
+                            <strong>Username:</strong> demo<br>
+                            <strong>Password:</strong> demo123
+                        </div>
+                        <p><strong>Access Level:</strong> Dashboard view, reports access, basic system information</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Features Section -->
+            <div class="section">
+                <h2>
+                    <div class="section-icon"><i class="fas fa-star"></i></div>
+                    Key Features
+                </h2>
+                <p>Explore SAMAP's comprehensive security and audit capabilities:</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>Security Monitoring</h3>
+                        <p>Real-time threat detection, risk assessment, and security event monitoring with AI-powered analytics</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-users-cog"></i></div>
+                        <h3>User Management</h3>
+                        <p>Complete user lifecycle management with role-based access control and permission management</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-clipboard-list"></i></div>
+                        <h3>Audit Logging</h3>
+                        <p>Comprehensive audit trails with detailed logging of all system activities and user actions</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Analytics Dashboard</h3>
+                        <p>Interactive dashboards with real-time metrics, charts, and security insights</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-balance-scale"></i></div>
+                        <h3>Compliance Reports</h3>
+                        <p>SOX, HIPAA, GDPR compliance reporting with automated report generation and export</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-key"></i></div>
+                        <h3>JWT Authentication</h3>
+                        <p>Secure token-based authentication with refresh tokens and session management</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Getting Started Section -->
+            <div class="section">
+                <h2>
+                    <div class="section-icon"><i class="fas fa-rocket"></i></div>
+                    Getting Started
+                </h2>
+                <p>Follow these steps to explore SAMAP's features:</p>
+                
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-content">
+                            <h4>Login with Demo Account</h4>
+                            <p>Choose any demo account above and login to access the system. Start with the admin account for full access.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-content">
+                            <h4>Explore the Dashboard</h4>
+                            <p>View real-time security metrics, user statistics, and system health indicators on the main dashboard.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-content">
+                            <h4>Test API Endpoints</h4>
+                            <p>Use the built-in API testing tools to explore user management, security monitoring, and audit log APIs.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-content">
+                            <h4>View Audit Logs</h4>
+                            <p>Check the comprehensive audit trail to see all system activities and user actions being logged.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-content">
+                            <h4>Generate Reports</h4>
+                            <p>Create compliance reports and export data in various formats (PDF, Excel, CSV).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Endpoints Section -->
+            <div class="section">
+                <h2>
+                    <div class="section-icon"><i class="fas fa-code"></i></div>
+                    API Endpoints
+                </h2>
+                <p>Key API endpoints available for testing and integration:</p>
+                
+                <div class="api-endpoints">
+                    <div class="endpoint">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/auth/login</span>
+                        <span class="endpoint-desc">User authentication</span>
+                    </div>
+                    <div class="endpoint">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/users</span>
+                        <span class="endpoint-desc">List all users</span>
+                    </div>
+                    <div class="endpoint">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/security/status</span>
+                        <span class="endpoint-desc">Security monitoring status</span>
+                    </div>
+                    <div class="endpoint">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/audit/logs</span>
+                        <span class="endpoint-desc">Audit log entries</span>
+                    </div>
+                    <div class="endpoint">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/users</span>
+                        <span class="endpoint-desc">Create new user</span>
+                    </div>
+                    <div class="endpoint">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/reports/compliance</span>
+                        <span class="endpoint-desc">Compliance reports</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="cta-section">
+                <h3>Ready to Explore SAMAP?</h3>
+                <p>Start your journey with our comprehensive security and audit platform</p>
+                <div class="cta-buttons">
+                    <a href="/" class="cta-btn primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Start Demo
+                    </a>
+                    <a href="/dashboard.html" class="cta-btn">
+                        <i class="fas fa-tachometer-alt"></i>
+                        View Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMAP Dashboard - Enterprise Security Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #1a202c;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .header-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-change.positive {
+            color: #10b981;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-header {
+            padding: 1.5rem 1.5rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .card-content {
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1a202c;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .threat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .threat-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .threat-info {
+            flex: 1;
+        }
+
+        .threat-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+        }
+
+        .threat-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .threat-level {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .threat-level.high {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .threat-level.medium {
+            background: #fffbeb;
+            color: #d97706;
+        }
+
+        .threat-level.low {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .api-test-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+        }
+
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .api-card {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .api-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .api-card-icon {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .api-card-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+        }
+
+        .api-card-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .result.success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .result.error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">🛡️</div>
+            <div>
+                <div class="header-title">SAMAP Dashboard</div>
+                <div class="header-subtitle">Enterprise Security Platform</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-name" id="user-name">Loading...</div>
+                <div class="user-role" id="user-role">Loading...</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Active Users</div>
+                    <div class="stat-icon" style="background: #dbeafe; color: #2563eb;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="active-users">0</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 12% from last week
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Security Events</div>
+                    <div class="stat-icon" style="background: #fef3c7; color: #d97706;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="security-events">0</div>
+                <div class="stat-change negative">
+                    <i class="fas fa-arrow-down"></i> 8% from last week
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Threat Level</div>
+                    <div class="stat-icon" style="background: #dcfce7; color: #16a34a;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="threat-level">LOW</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-check"></i> All systems secure
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">System Uptime</div>
+                    <div class="stat-icon" style="background: #f3e8ff; color: #9333ea;">
+                        <i class="fas fa-server"></i>
+                    </div>
+                </div>
+                <div class="stat-value">99.9%</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> Excellent performance
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Recent Activities -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-title">Recent Security Activities</div>
+                    <div class="card-subtitle">Live monitoring of system events</div>
+                </div>
+                <div class="card-content">
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #dcfce7; color: #16a34a;">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Admin login successful</div>
+                            <div class="activity-time">2 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #fef3c7; color: #d97706;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Failed login attempt detected</div>
+                            <div class="activity-time">15 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #dbeafe; color: #2563eb;">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">New user account created</div>
+                            <div class="activity-time">1 hour ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #f3e8ff; color: #9333ea;">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">System configuration updated</div>
+                            <div class="activity-time">3 hours ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Threat Intelligence -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-title">Threat Intelligence</div>
+                    <div class="card-subtitle">Current security threats</div>
+                </div>
+                <div class="card-content">
+                    <div class="threat-item">
+                        <div class="threat-info">
+                            <div class="threat-title">Brute Force Attack</div>
+                            <div class="threat-desc">Multiple failed login attempts</div>
+                        </div>
+                        <div class="threat-level medium">MEDIUM</div>
+                    </div>
+                    <div class="threat-item">
+                        <div class="threat-info">
+                            <div class="threat-title">Suspicious IP Activity</div>
+                            <div class="threat-desc">Unknown IP accessing system</div>
+                        </div>
+                        <div class="threat-level low">LOW</div>
+                    </div>
+                    <div class="threat-item">
+                        <div class="threat-info">
+                            <div class="threat-title">System Health</div>
+                            <div class="threat-desc">All systems operational</div>
+                        </div>
+                        <div class="threat-level low">NORMAL</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Testing Section -->
+        <div class="api-test-section">
+            <div class="card-title">Enterprise API Testing</div>
+            <div class="card-subtitle">Test all enterprise features and APIs</div>
+            
+            <div class="api-grid">
+                <div class="api-card" onclick="testUsers()">
+                    <div class="api-card-icon"><i class="fas fa-users"></i></div>
+                    <div class="api-card-title">User Management</div>
+                    <div class="api-card-desc">CRUD operations and user data</div>
+                </div>
+                <div class="api-card" onclick="testSecurity()">
+                    <div class="api-card-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="api-card-title">Security Monitor</div>
+                    <div class="api-card-desc">Threat intelligence and alerts</div>
+                </div>
+                <div class="api-card" onclick="testAuditLogs()">
+                    <div class="api-card-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="api-card-title">Audit Logs</div>
+                    <div class="api-card-desc">Compliance and activity trails</div>
+                </div>
+                <div class="api-card" onclick="testCompliance()">
+                    <div class="api-card-icon"><i class="fas fa-balance-scale"></i></div>
+                    <div class="api-card-title">Compliance</div>
+                    <div class="api-card-desc">SOX, HIPAA, GDPR reports</div>
+                </div>
+            </div>
+            
+            <div id="api-result"></div>
+        </div>
+    </div>
+
+    <script>
+        let authToken = localStorage.getItem('authToken');
+        let currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+        // Initialize dashboard
+        window.onload = function() {
+            if (!authToken) {
+                window.location.href = '/';
+                return;
+            }
+            
+            loadUserInfo();
+            updateStats();
+            setInterval(updateStats, 30000); // Update every 30 seconds
+        };
+
+        function loadUserInfo() {
+            if (currentUser.firstName) {
+                document.getElementById('user-name').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                document.getElementById('user-role').textContent = currentUser.roles ? currentUser.roles.join(', ') : 'User';
+            }
+        }
+
+        function updateStats() {
+            // Simulate real-time stats
+            document.getElementById('active-users').textContent = Math.floor(Math.random() * 50) + 10;
+            document.getElementById('security-events').textContent = Math.floor(Math.random() * 100) + 50;
+            
+            const threatLevels = ['LOW', 'MEDIUM', 'HIGH'];
+            const randomThreat = threatLevels[Math.floor(Math.random() * threatLevels.length)];
+            const threatElement = document.getElementById('threat-level');
+            threatElement.textContent = randomThreat;
+            threatElement.style.color = randomThreat === 'HIGH' ? '#dc2626' : 
+                                      randomThreat === 'MEDIUM' ? '#d97706' : '#16a34a';
+        }
+
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            window.location.href = '/';
+        }
+
+        // API Testing Functions
+        async function testUsers() {
+            try {
+                const response = await fetch('/api/users?page=0&size=5', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('success', `
+                        <strong>✅ User Management API</strong><br>
+                        Total Users: ${data.totalElements}<br>
+                        Users: ${data.content.map(u => u.username).join(', ')}
+                    `);
+                } else {
+                    showResult('error', `❌ Error: ${data.message}`);
+                }
+            } catch (error) {
+                showResult('error', `❌ Network Error: ${error.message}`);
+            }
+        }
+
+        async function testSecurity() {
+            try {
+                const response = await fetch('/api/security/status', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('success', `
+                        <strong>✅ Security Monitoring API</strong><br>
+                        Threat Level: ${data.threatLevel}<br>
+                        Total Activities: ${data.totalActivities}<br>
+                        Active Threats: ${data.activeIpThreats + data.activeUserThreats}
+                    `);
+                } else {
+                    showResult('error', `❌ Error: ${data.message}`);
+                }
+            } catch (error) {
+                showResult('error', `❌ Network Error: ${error.message}`);
+            }
+        }
+
+        async function testAuditLogs() {
+            try {
+                const response = await fetch('/api/audit/logs?page=0&size=3', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('success', `
+                        <strong>✅ Audit Logs API</strong><br>
+                        Total Logs: ${data.totalElements}<br>
+                        Recent: ${data.content.map(log => `${log.action} by ${log.username}`).join(', ')}
+                    `);
+                } else {
+                    showResult('error', `❌ Error: ${data.message}`);
+                }
+            } catch (error) {
+                showResult('error', `❌ Network Error: ${error.message}`);
+            }
+        }
+
+        async function testCompliance() {
+            showResult('success', `
+                <strong>✅ Compliance Features Available</strong><br>
+                • SOX Compliance Reports<br>
+                • HIPAA Compliance Reports<br>
+                • GDPR Compliance Reports<br>
+                • Custom Report Generation<br>
+                • PDF/Excel Export Capabilities
+            `);
+        }
+
+        function showResult(type, message) {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.className = `result ${type}`;
+            resultDiv.innerHTML = message;
+        }
+    </script>
+</body>
+</html>
