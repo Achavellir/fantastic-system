@@ -82,7 +82,7 @@ services:
       retries: 3
       start_period: 30s
 
-  # Redis for Caching (Optional)
+  # Redis for Caching
   samap-redis:
     image: redis:7-alpine
     container_name: samap-redis
@@ -100,6 +100,67 @@ services:
       timeout: 10s
       retries: 3
 
+  # RabbitMQ for Message Queue (Optional)
+  samap-rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: samap-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:-admin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-admin123}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST:-/}
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI
+    networks:
+      - samap-network
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Prometheus for Metrics Collection
+  samap-prometheus:
+    image: prom/prometheus:latest
+    container_name: samap-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    networks:
+      - samap-network
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+
+  # Grafana for Monitoring Dashboard
+  samap-grafana:
+    image: grafana/grafana:latest
+    container_name: samap-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin123}
+    ports:
+      - "3000:3000"
+    networks:
+      - samap-network
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    depends_on:
+      - samap-prometheus
+
 networks:
   samap-network:
     driver: bridge
@@ -110,6 +171,12 @@ volumes:
     name: samap_postgres_data
   redis_data:
     name: samap_redis_data
+  rabbitmq_data:
+    name: samap_rabbitmq_data
+  prometheus_data:
+    name: samap_prometheus_data
+  grafana_data:
+    name: samap_grafana_data
   app_logs:
     name: samap_app_logs
   nginx_logs:

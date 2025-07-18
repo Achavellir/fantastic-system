@@ -37,6 +37,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final CustomUserDetailsService userDetailsService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final RateLimitingFilter rateLimitingFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -91,6 +92,8 @@ public class SecurityConfig {
             // Authentication provider
             .authenticationProvider(authenticationProvider())
 
+            // Rate limiting filter
+            .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
             // JWT filter
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
