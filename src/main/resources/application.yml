@@ -60,17 +60,20 @@ spring:
 
   # Redis configuration
   redis:
+    enabled: ${REDIS_ENABLED:true}
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
     password: ${REDIS_PASSWORD:}
     database: ${REDIS_DATABASE:0}
     timeout: 2000ms
+    connect-timeout: 2000ms
     lettuce:
       pool:
         max-active: 20
         max-idle: 10
         min-idle: 5
-        max-wait: -1ms
+        max-wait: 2000ms
+      shutdown-timeout: 100ms
 
   # Cache configuration
   cache:

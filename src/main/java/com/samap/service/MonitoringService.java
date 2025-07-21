@@ -3,8 +3,8 @@ package com.samap.service;
 import com.samap.config.MetricsConfig;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Timer;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
  * Comprehensive monitoring service for system health and metrics
  */
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class MonitoringService {
 
@@ -41,6 +40,46 @@ public class MonitoringService {
     private final Timer auditLogProcessingTimer;
     private final Timer riskAssessmentTimer;
 
+    public MonitoringService(
+            MetricsConfig metricsConfig,
+            @Autowired(required = false) RedisTemplate<String, Object> redisTemplate,
+            Counter loginSuccessCounter,
+            Counter loginFailureCounter,
+            Counter securityAlertsCounter,
+            Counter anomalyDetectionCounter,
+            Counter userCreationCounter,
+            Counter accountLockoutCounter,
+            Counter rateLimitExceededCounter,
+            Counter cacheHitCounter,
+            Counter cacheMissCounter,
+            Counter auditLogCounter,
+            Counter complianceReportCounter,
+            Timer loginDurationTimer,
+            Timer apiRequestTimer,
+            Timer databaseQueryTimer,
+            Timer auditLogProcessingTimer,
+            Timer riskAssessmentTimer) {
+
+        this.metricsConfig = metricsConfig;
+        this.redisTemplate = redisTemplate;
+        this.loginSuccessCounter = loginSuccessCounter;
+        this.loginFailureCounter = loginFailureCounter;
+        this.securityAlertsCounter = securityAlertsCounter;
+        this.anomalyDetectionCounter = anomalyDetectionCounter;
+        this.userCreationCounter = userCreationCounter;
+        this.accountLockoutCounter = accountLockoutCounter;
+        this.rateLimitExceededCounter = rateLimitExceededCounter;
+        this.cacheHitCounter = cacheHitCounter;
+        this.cacheMissCounter = cacheMissCounter;
+        this.auditLogCounter = auditLogCounter;
+        this.complianceReportCounter = complianceReportCounter;
+        this.loginDurationTimer = loginDurationTimer;
+        this.apiRequestTimer = apiRequestTimer;
+        this.databaseQueryTimer = databaseQueryTimer;
+        this.auditLogProcessingTimer = auditLogProcessingTimer;
+        this.riskAssessmentTimer = riskAssessmentTimer;
+    }
+
     /**
      * Record successful login
      */
@@ -49,10 +88,16 @@ public class MonitoringService {
         loginDurationTimer.record(durationMs, TimeUnit.MILLISECONDS);
         metricsConfig.incrementActiveUsers();
         
-        // Store in Redis for real-time monitoring
-        String key = "login:success:" + LocalDateTime.now().toLocalDate();
-        redisTemplate.opsForHash().increment(key, username, 1);
-        redisTemplate.expire(key, 7, TimeUnit.DAYS);
+        // Store in Redis for real-time monitoring (if available)
+        if (redisTemplate != null) {
+            try {
+                String key = "login:success:" + LocalDateTime.now().toLocalDate();
+                redisTemplate.opsForHash().increment(key, username, 1);
+                redisTemplate.expire(key, 7, TimeUnit.DAYS);
+            } catch (Exception e) {
+                log.warn("Failed to store login success in Redis: {}", e.getMessage());
+            }
+        }
         
         log.debug("Login success recorded for user: {} in {}ms", username, durationMs);
     }
